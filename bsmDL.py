@@ -10,7 +10,8 @@ import lib
 
 '''
 This script is just an over-simplification (or so, most of the parts are taken from FelixFrog tool)
-of @FelixFrog pdfgrabber tool. If u want something more complete check out his work https://github.com/FelixFrog/pdfgrabber
+of @FelixFrog pdfgrabber tool. If u want something more complete and better made, check out his work 
+https://github.com/FelixFrog/pdfgrabber
 '''
 
 key =  bytes([30, 0, 184, 152, 115, 19, 157, 33, 4, 237, 80, 26, 139, 248, 104, 155]) #'HgC4mHMTnSEE7VAai/homw=='
