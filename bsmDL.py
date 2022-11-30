@@ -9,7 +9,7 @@ import re
 import lib
 
 '''
-This script is just an overs-implification (or so, most of the parts are taken from FelixFrog tool)
+This script is just an over-simplification (or so, most of the parts are taken from FelixFrog tool)
 of @FelixFrog pdfgrabber tool. If u want something more complete check out his work https://github.com/FelixFrog/pdfgrabber
 '''
 
