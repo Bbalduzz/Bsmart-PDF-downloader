@@ -92,8 +92,3 @@ pdf.set_page_labels(lib.generatelabelsrule(labels))
 pdf.set_toc(toc)
 
 pdf.save(f'{book_id}.pdf')
-
-
-
-
-
