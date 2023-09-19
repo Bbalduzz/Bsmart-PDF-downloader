@@ -9,5 +9,5 @@ Script to download your bsmart books from bsmart web reader. (multiple assists f
 
 ### Demo Video
 
-https://user-images.githubusercontent.com/81587335/204883453-b5bd11e8-93b5-4dcb-8fb9-e039d16755d5.mov
+https://github.com/Bbalduzz/Bsmart-PDF-downloader/assets/81587335/d3978a5b-c709-4dbe-b599-f0938a585905
 
