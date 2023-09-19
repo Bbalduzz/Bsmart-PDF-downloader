@@ -1,6 +1,7 @@
 from Crypto.Util.Padding import unpad
 from Crypto.Cipher import AES
 from io import BytesIO
+from tqdm import tqdm
 import requests
 import umsgpack
 import inquirer
@@ -36,10 +37,14 @@ class BSmartAPI:
         return self._api_call(f"books/{bookid}/{revision}/{operation}", headers={"auth_token": self.token}, params={"per_page": 1000000})
 
     def download_pack(self, url):
-        r = self.session.get(url, stream=True)
+        response = self.session.get(url, stream=True)
+        total_size = int(response.headers.get('content-length', 0))
+        block_size = 1024  # 1 KB
         file = b""
-        for data in r.iter_content(chunk_size=204800):
-            file += data
+        with tqdm(total=total_size, unit='KB', unit_scale=True, desc="Downloading") as bar:
+            for data in response.iter_content(block_size):
+                file += data
+                bar.update(len(data))
         return tarfile.open(fileobj=BytesIO(file))
 
     def decrypt_file(self, file):
@@ -53,7 +58,12 @@ class BSmartAPI:
         login_data = self.get_login_data(username, password)
         if "auth_token" not in login_data:
             raise ValueError("There was and error while authentication: " + login_data["message"])
+        print(login_data["auth_token"])
         self.token = login_data["auth_token"]
+
+    def check_token(self, token):
+        test = self.get_library(token)
+        return "message" not in test
 
     def library(self):
         books = {str(book["id"]): {"title": book["title"], "revision": book["current_edition"]["revision"], "cover": book["cover"]} for book in self.get_library() if not book["liquid_text"]}
@@ -72,7 +82,7 @@ class BSmartAPI:
         pagespdf = {}
         asset_packs = self.get_book_info(bookid, revision, "asset_packs")
         pagespack = self.download_pack(next(pack["url"] for pack in asset_packs if pack["label"] == "page_pdf"))
-        for member in pagespack.getmembers():
+        for member in tqdm(pagespack.getmembers(), desc="Decrypting files"):
             if file := pagespack.extractfile(member):
                 output, md5 = self.decrypt_file(file)
                 pid, label = resmd5[md5]
@@ -83,7 +93,7 @@ class BSmartAPI:
         index = self.get_book_info(bookid, revision, "index")
 
         bookmarks = {entry["first_page"]["id"]: entry["title"] for entry in index if "first_page" in entry}
-        for i, (pageid, pagepdfraw) in enumerate(sorted(pagespdf.items())):
+        for i, (pageid, pagepdfraw) in enumerate(tqdm(sorted(pagespdf.items()), desc="Saving to PDF")):
             pagepdf = fitz.Document(stream=pagepdfraw, filetype="pdf")
             pdf.insert_pdf(pagepdf)
             if pageid in bookmarks:
