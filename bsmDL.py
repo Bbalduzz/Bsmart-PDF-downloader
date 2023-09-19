@@ -55,10 +55,6 @@ class BSmartAPI:
             raise ValueError("There was and error while authentication: " + login_data["message"])
         self.token = login_data["auth_token"]
 
-    def check_token(self, token):
-        test = self.get_library(token)
-        return "message" not in test
-
     def library(self):
         books = {str(book["id"]): {"title": book["title"], "revision": book["current_edition"]["revision"], "cover": book["cover"]} for book in self.get_library() if not book["liquid_text"]}
         return books
