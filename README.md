@@ -5,7 +5,9 @@ Script to download your bsmart books from bsmart web reader. (multiple assists f
 - install python [https://www.python.org/downloads/]
    - install pip or pip3
 - install required imports
+- update the `CREDS` with your credentials
 - run `python3/py bsmDL.py`
+
 
 ### Demo Video
 
